@@ -1,3 +1,4 @@
+
 /*
  * BinClock.c
  * Jarrod Olivier
@@ -72,6 +73,7 @@ void initGPIO(void){
 	//Attach interrupts to Buttons
 	//Write your logic here
 	
+	wiringPiISR(BTNS[0],INT_EDGE_FALLING,&hourInc);
 
 
 	printf("BTNS done\n");
@@ -86,7 +88,6 @@ void initGPIO(void){
 int main(void){
 	signal(SIGINT,CleanUp);
 	initGPIO();
-
 	//Set random time (3:04PM)
 	//You can comment this file out later
 	wiringPiI2CWriteReg8(RTC, HOUR_REGISTER, 0x13+TIMEZONE);
@@ -105,12 +106,11 @@ int main(void){
 		digitalWrite(LED,HIGH);
 		delay(1000);
 		digitalWrite(LED,LOW);
-		delay(1000);
-		
+		wiringPiISR(BTNS[0],INT_EDGE_FALLING,&hourInc);	
 
 		// Print out the time we have stored on our RTC
 		printf("The current time is: %d:%d:%d\n", hours, mins, secs);
-
+	
 		//using a delay to make our program "less CPU hungry"
 		delay(1000); //milliseconds
 	}
@@ -199,6 +199,9 @@ void hourInc(void){
 	if (interruptTime - lastInterruptTime>200){
 		printf("Interrupt 1 triggered, %x\n", hours);
 		//Fetch RTC Time
+		 hours=wiringPiI2CReadReg8(RTC,HOUR_REGISTER)+1;
+		 hours=hFormat(hours);
+		 wiringPiI2CWriteReg8(RTC, HOUR_REGISTER, hours);	
 		//Increase hours by 1, ensuring not to overflow
 		//Write hours back to the RTC
 	}
