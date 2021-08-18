@@ -32,7 +32,8 @@ void CleanUp(int sig){
 
 	//Set LED to low then input mode
 	//Logic here
-
+	digitalWrite(LED,LOW);
+	pinMode(LED,INPUT);
 
 	for (int j=0; j < sizeof(BTNS)/sizeof(BTNS[0]); j++) {
 		pinMode(BTNS[j],INPUT);
@@ -57,7 +58,9 @@ void initGPIO(void){
 	//Set up the LED
 	//Write your Logic here
 
-	
+	pinMode(LED,OUTPUT);
+
+
 	printf("LED and RTC done\n");
 	
 	//Set up the Buttons
@@ -94,10 +97,17 @@ int main(void){
 	for (;;){
 		//Fetch the time from the RTC
 		//Write your logic here
-		
+		 hFormat(wiringPiI2CReadReg8(RTC,HOUR_REGISTER));
+		 mins=wiringPiI2CReadReg8 (RTC,MIN_REGISTER);
+		 secs=wiringPiI2CReadReg8 (RTC,SEC_REGISTER);		
 		//Toggle Seconds LED
 		//Write your logic here
+		digitalWrite(LED,HIGH);
+		delay(1000);
+		digitalWrite(LED,LOW);
+		delay(1000);
 		
+
 		// Print out the time we have stored on our RTC
 		printf("The current time is: %d:%d:%d\n", hours, mins, secs);
 
