@@ -1,4 +1,5 @@
 
+
 /*
  * BinClock.c
  * Jarrod Olivier
@@ -106,11 +107,8 @@ int main(void){
 		digitalWrite(LED,HIGH);
 		delay(1000);
 		digitalWrite(LED,LOW);
-		wiringPiISR(BTNS[0],INT_EDGE_FALLING,&hourInc);	
-
 		// Print out the time we have stored on our RTC
 		printf("The current time is: %d:%d:%d\n", hours, mins, secs);
-	
 		//using a delay to make our program "less CPU hungry"
 		delay(1000); //milliseconds
 	}
@@ -201,9 +199,10 @@ void hourInc(void){
 		//Fetch RTC Time
 		 hours=wiringPiI2CReadReg8(RTC,HOUR_REGISTER)+1;
 		 hours=hFormat(hours);
+		 hours=decCompensation(hours);
 		 wiringPiI2CWriteReg8(RTC, HOUR_REGISTER, hours);	
 		//Increase hours by 1, ensuring not to overflow
-		//Write hours back to the RTC
+		//Write hours back to the RTdecCompensation(C
 	}
 	lastInterruptTime = interruptTime;
 }
@@ -220,8 +219,18 @@ void minInc(void){
 	if (interruptTime - lastInterruptTime>200){
 		printf("Interrupt 2 triggered, %x\n", mins);
 		//Fetch RTC Time
+		mins=wiringPiI2CReadReg8(RTC,MIN_REGISTER)+1;
 		//Increase minutes by 1, ensuring not to overflow
-		//Write minutes back to the RTC
+
+		//check if minutes is 60 so it can increment hour 
+		if(mins>=60){
+			mins=0;}
+		
+		///Write minutes back to the RTC
+		mins = decCompensation(mins);
+		wiringPiI2CWriteReg8(RTC, MIN_REGISTER, mins);
+		///Write minutes back to the RTC
+	
 	}
 	lastInterruptTime = interruptTime;
 }
