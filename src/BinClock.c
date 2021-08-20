@@ -201,7 +201,7 @@ void hourInc(void){
 		//Fetch RTC Time
 		 hours=wiringPiI2CReadReg8(RTC,HOUR_REGISTER)+1;
 		 hours=hFormat(hours);
-		 hours=decCompensation(hours);
+		 //hours=decCompensation(hours);
 		 wiringPiI2CWriteReg8(RTC, HOUR_REGISTER, hours);	
 		//Increase hours by 1, ensuring not to overflow
 		//Write hours back to the RTdecCompensation(C
@@ -226,10 +226,14 @@ void minInc(void){
 
 		//check if minutes is 60 so it can increment hour 
 		if(mins>=60){
+		hours=wiringPiI2CReadReg8(RTC,HOUR_REGISTER)+1;
+                hours=hFormat(hours);
+                //hours=decCompensation(hours);
+                wiringPiI2CWriteReg8(RTC, HOUR_REGISTER, hours);	
 			mins=0;}
 		
 		///Write minutes back to the RTC
-		mins = decCompensation(mins);
+		//mins = decCompensation(mins);
 		wiringPiI2CWriteReg8(RTC, MIN_REGISTER, mins);
 		///Write minutes back to the RTC
 	
@@ -243,7 +247,7 @@ void toggleTime(void){
 	long interruptTime = millis();
 
 	if (interruptTime - lastInterruptTime>200){
-		HH = getHours();
+ 		HH = getHours();
 		MM = getMins();
 		SS = getSecs();
 
