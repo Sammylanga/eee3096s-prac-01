@@ -60,9 +60,7 @@ void initGPIO(void){
 	
 	//Set up the LED
 	//Write your Logic here
-
 	pinMode(LED,OUTPUT);
-
 
 	printf("LED and RTC done\n");
 	
@@ -74,9 +72,8 @@ void initGPIO(void){
 	
 	//Attach interrupts to Buttons
 	//Write your logic here
-	
-	wiringPiISR(BTNS[0],INT_EDGE_FALLING,&hourInc);
-	wiringPiISR(BTNS[1],INT_EDGE_FALLING,&minInc);
+	wiringPiISR(BTNS[0],INT_EDGE_RISING,&hourInc);
+	wiringPiISR(BTNS[1],INT_EDGE_RISING,&minInc);
 
 
 	printf("BTNS done\n");
@@ -102,7 +99,7 @@ int main(void){
 		//Fetch the time from the RTC
 		//Write your logic here
 		 hours=hFormat(wiringPiI2CReadReg8(RTC,HOUR_REGISTER));
-		 mins=wiringPiI2CReadReg8 (RTC,MIN_REGISTER);
+		 mins=decwiringPiI2CReadReg8 (RTC,MIN_REGISTER);
 		 secs=wiringPiI2CReadReg8 (RTC,SEC_REGISTER);		
 		//Toggle Seconds LED
 		//Write your logic here
