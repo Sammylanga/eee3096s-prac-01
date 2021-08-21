@@ -86,13 +86,16 @@ void initGPIO(void){
  * This function is called, and calls all relevant functions we've written
  */
 int main(void){
+	int state = HIGH;
 	signal(SIGINT,CleanUp);
 	initGPIO();
+	
 	//Set random time (3:04PM)
 	//You can comment this file out later
 	//wiringPiI2CWriteReg8(RTC, HOUR_REGISTER, 0x13+TIMEZONE);
 	//wiringPiI2CWriteReg8(RTC, MIN_REGISTER, 0x4);
 	//wiringPiI2CWriteReg8(RTC, SEC_REGISTER, 0x00);
+	
 	toggleTime();
 	// Repeat this until we shut down
 	for (;;){
@@ -103,9 +106,8 @@ int main(void){
 		 secs=wiringPiI2CReadReg8 (RTC,SEC_REGISTER);		
 		//Toggle Seconds LED
 		//Write your logic here
-		digitalWrite(LED,HIGH);
-		delay(1000);
-		digitalWrite(LED,LOW);
+		digitalWrite(LED,state);
+		state = (state == HIGH)? LOW: HIGH;
 		// Print out the time we have stored on our RTC
 		printf("The current time is: %d:%d:%d\n", hours, mins, secs);
 		//using a delay to make our program "less CPU hungry"
