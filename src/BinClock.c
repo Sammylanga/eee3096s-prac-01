@@ -8,8 +8,8 @@
  * Further Modified By: Mark Njoroge 
  *
  * 
- * <STUDNUM_1> <STUDNUM_2>
- * Date
+ * ntlnko007 mmklan001
+ * Date 21 Aug 2021
 */
 
 #include <signal.h> //for catching signals
